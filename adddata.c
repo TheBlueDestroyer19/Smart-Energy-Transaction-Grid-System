@@ -4,7 +4,7 @@
 #include "template.h"
 
 int isValidDate(char *date) {
-  int valid=1;
+  int valid=1;  
   int day, month, year;
   int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
