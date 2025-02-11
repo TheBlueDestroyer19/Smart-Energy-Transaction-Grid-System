@@ -25,7 +25,8 @@ typedef struct SellerAttrib{
   unsigned int sellerID;
   float b300;
   float a300;
-  IdNode *regularBuyers;
+  IdNode *regularBuyersHead;
+  IdNode *regularBuyersTail;
 }SellerAttrib;
 
 typedef struct SellersList{
@@ -43,9 +44,10 @@ typedef struct seller_buyer{
 
 typedef struct pair {
   int count;
+  int flag;
   unsigned int sellerID;
   unsigned int buyerID; 
-  struct pair* next;   
+  struct pair* next; 
 }Pair;
 
 retstat addEntry(TransNode **,TransNode **,SellersList *);
@@ -61,8 +63,11 @@ retstat createSellersList(seller_buyer**,TransNode*);
 void clearSellersList(seller_buyer**);
 retstat createBuyersList(seller_buyer**,TransNode*);
 void clearBuyersList(seller_buyer**);
-void sort_pairs(TransNode*);
-void update(TransNode*);
+Pair* sort_pairs(TransNode*,Pair*);
+void update(TransNode*,SellersList*);
 TransNode* max_ener(TransNode *);
 void revenueGenerated(seller_buyer *);
 seller_buyer* calculateEnergy(seller_buyer *);
+void clearPairs(Pair**);
+void createListRegular(SellersList *, Pair *);
+void saveRegularBuyers(SellersList *);
