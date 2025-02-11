@@ -10,6 +10,7 @@ int main() {
   SellersList *sellerhead=NULL, *sellertail=NULL;
   seller_buyer *sellerlisthead=NULL;
   seller_buyer *buyerlisthead=NULL;
+  Pair *pairhead=NULL;
   retstat status_code;
   
   loadSellersFromFile(&sellerhead,&sellertail);
@@ -29,6 +30,7 @@ int main() {
     printf("8. Sort Buyers by Energy Bought\n");
     printf("9. Sort Seller/Buyer Pairs by Number of Transactions\n");
     printf("10. Update Transaction\n");
+    printf("11. Create a list of regular buyers for every seller\n");
     printf("0. Exit\n");
     printf("=======================================\n");
     printf("Enter your choice: ");
@@ -73,11 +75,15 @@ int main() {
       break;
 
       case 9:
-        sort_pairs(mainhead);
+        pairhead=sort_pairs(mainhead,pairhead);
       break;
 
       case 10:
-        update(mainhead);
+        update(mainhead,sellerhead);
+      break;
+
+      case 11:
+        createListRegular(sellerhead,pairhead);
       break;
 
       case 0:
@@ -90,7 +96,8 @@ int main() {
 
 
   saveTransactions(mainhead);
-
+  saveRegularBuyers(sellerhead);
+  clearPairs(&pairhead);
   cleanTransList(&mainhead);
   clearSellersList(&sellerlisthead);
   clearSellersList(&buyerlisthead);
