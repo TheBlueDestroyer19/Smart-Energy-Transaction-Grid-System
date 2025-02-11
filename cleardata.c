@@ -51,3 +51,13 @@ void clearSellersList(seller_buyer** sellerlisthead) {
   }
   printf("Done\n");
 }
+
+void clearPairs(Pair** pairhead) {
+  printf("Cleaning up the trash....."); 
+  while(*pairhead!=NULL) {
+  Pair* ptr=*pairhead;
+  *pairhead=(*pairhead)->next;
+  free(ptr);
+  }
+  printf("Done\n");
+}
