@@ -1,74 +1,68 @@
 #include<stdio.h>
-#include "template.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "template.h"
 
 TransNode* Merge(TransNode* list1, TransNode* list2) {
-    if (list1 == NULL) return list2;
-    if (list2 == NULL) return list1;
-
-    TransNode* result = NULL;
-    TransNode* tail = NULL;
-
-    TransNode* ptr1 = list1;
-    TransNode* ptr2 = list2;
-
-    if (ptr1->entry.amtOfEnergy < ptr2->entry.amtOfEnergy) {
-        result = tail = ptr1;
-        ptr1 = ptr1->next;
-    } else {
-        result = tail = ptr2;
-        ptr2 = ptr2->next;
+  TransNode *result=NULL,*tail=NULL,*ptr1=list1,*ptr2=list2;
+  if(list1 == NULL) result=list2;
+  else if(list2 == NULL) result=list1;
+  else {
+    if (ptr1->entry.amtOfEnergy<ptr2->entry.amtOfEnergy) {
+        result=tail=ptr1;
+        ptr1=ptr1->next;
+    }
+    else {
+        result=tail=ptr2;
+        ptr2=ptr2->next;
     }
 
-    while (ptr1 != NULL && ptr2 != NULL) {
-        if (ptr1->entry.amtOfEnergy < ptr2->entry.amtOfEnergy) {
-            tail->next = ptr1;
-            ptr1 = ptr1->next;
-        } else {
-            tail->next = ptr2;
-            ptr2 = ptr2->next;
-        }
-        tail = tail->next;
+    while(ptr1!=NULL && ptr2!=NULL) {
+      if (ptr1->entry.amtOfEnergy<ptr2->entry.amtOfEnergy) {
+        tail->next=ptr1;
+        ptr1=ptr1->next;
+      } 
+      else {
+        tail->next=ptr2;
+        ptr2=ptr2->next;
+      }
+      tail=tail->next;
     }
 
-    if (ptr1 != NULL) {
-        tail->next = ptr1;
-    } else {
-        tail->next = ptr2;
-    }
-
-    return result;
+    if (ptr1!=NULL) tail->next=ptr1;
+    else tail->next=ptr2;
+  }
+  return result;
 }
 
 TransNode* Divide(TransNode* lptr) {
-    if (lptr == NULL || lptr->next == NULL) {
-        return NULL;
+  TransNode *fast,*slow,*nptr=NULL;
+  fast=slow=lptr;
+  if (lptr==NULL || lptr->next==NULL) nptr=NULL;
+  else {
+    fast = lptr->next;
+
+    while (fast!=NULL && fast->next!=NULL) {
+      slow=slow->next;
+      fast=fast->next->next;
     }
 
-    TransNode* slow = lptr;
-    TransNode* fast = lptr->next;
-
-    while (fast != NULL && fast->next != NULL) {
-        slow = slow->next;
-        fast = fast->next->next;
-    }
-
-    TransNode* nptr = slow->next;
+    nptr = slow->next;
     slow->next = NULL;
-    return nptr;
+  }
+  return nptr;
 }
 
 TransNode* MergeSort(TransNode* lptr) {
-    if (lptr == NULL || lptr->next == NULL) {
-        return lptr;
-    }
-
-    TransNode* nptr = Divide(lptr);
-    lptr = MergeSort(lptr);
-    nptr = MergeSort(nptr);
-    return Merge(lptr, nptr);
+  TransNode *result,*nptr;
+  if (lptr==NULL || lptr->next==NULL) result=lptr;
+  else {
+    nptr=Divide(lptr);
+    lptr=MergeSort(lptr);
+    nptr=MergeSort(nptr);
+    result=Merge(lptr,nptr);
+  }
+  return result;
 }
 TransNode* max_ener(TransNode *mainhead)
 {
