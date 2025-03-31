@@ -1,105 +1,49 @@
-#include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "template.h"
 
 int main() {
+  int choice=1;
+  TransactionTree *transRoot=createNode(1);
+  SellerTree *sellerRoot=NULL;
 
-  int choice;
-  TransNode *mainhead=NULL, *maintail=NULL, *temp;
-  SellersList *sellerhead=NULL, *sellertail=NULL;
-  seller_buyer *sellerlisthead=NULL;
-  seller_buyer *buyerlisthead=NULL;
-  Pair *pairhead=NULL;
-  retstat status_code;
-  
-  loadSellersFromFile(&sellerhead,&sellertail);
-  readTransactions(&mainhead,&maintail);
+  transRoot=addTransactionsFromFile(transRoot);
 
-  do {
-    printf("\n=======================================\n");
-    printf("Energy Trading System Menu:\n");
-    printf("=======================================\n");
-    printf("1. Add New Transaction\n");
-    printf("2. Display All Transactions\n");
-    printf("3. List Transactions by Seller\n");
-    printf("4. List Transactions by Buyer\n");
-    printf("5. List Transactions in a Given Time Period\n");
-    printf("6. Calculate Total Revenue by Seller\n");
-    printf("7. Find Transaction with Highest Energy Amount\n");
-    printf("8. Sort Buyers by Energy Bought\n");
-    printf("9. Sort Seller/Buyer Pairs by Number of Transactions\n");
-    printf("10. Update Transaction\n");
-    printf("11. Create a list of regular buyers for every seller\n");
-    printf("0. Exit\n");
-    printf("=======================================\n");
-    printf("Enter your choice: ");
+  while(choice) {
+    printf("\n==============================================\n");
+    printf("             SMART GRID TRANSACTION SYSTEM      \n");
+    printf("==============================================\n");
+    printf("  1. Add New Transaction\n");
+    printf("  2. Display All Transactions\n");
+    printf("  3. Create a set of Transactions for Every Seller\n");
+    printf("  4. Create a set of Transactions for Every Buyer\n");
+    printf("  5. Find all transactions in a Given Time Period\n");
+    printf("  6. Calculate Total Revenue by Seller\n");
+    printf("  7. Find and Display Transactions in Energy Range\n");
+    printf("  8. Sort Buyers Based on Energy Bought\n");
+    printf("  9. Sort Seller/Buyer Pairs by Number of Transactions\n");
+    printf("  0. Exit\n");
+    printf("==============================================\n");
+    printf("\nEnter your choice: ");
     scanf("%d", &choice);
 
     switch (choice) {
-      case 1: 
-        status_code=addEntry(&mainhead,&maintail,sellerhead);
-        if(status_code==failure) printf("Failed to add the entry!!\n");
-        else printf("Successfully added the entry!!\n");
-      break;
-
-      case 2:
-        displayData(mainhead);
-      break;
-
-      case 3: 
-        createSellersList(&sellerlisthead,mainhead);
-      break;
-
-      case 4:
-        createBuyersList(&buyerlisthead,mainhead);
-      break;
-
-      case 5: 
-        listTransinTime(mainhead);
-      break;
-
-      case 6:
-        revenueGenerated(sellerlisthead);
-      break;
-
-      case 7:
-        mainhead=max_ener(mainhead);
-        temp=mainhead;
-        while(temp->next!=NULL) temp=temp->next;
-        maintail=temp;
-      break;
-
-      case 8:
-        buyerlisthead=calculateEnergy(buyerlisthead);
-      break;
-
-      case 9:
-        pairhead=sort_pairs(mainhead,pairhead);
-      break;
-
-      case 10:
-        update(mainhead,sellerhead);
-      break;
-
-      case 11:
-        createListRegular(sellerhead,pairhead);
-      break;
-
-      case 0:
-        printf("Exiting program...\n"); 
-      break;
-
-      default: printf("Invalid choice! Please enter a valid option.\n");
+      case 1: transRoot=addTransaction(transRoot,sellerRoot); break;
+      case 2: displayTransactions(transRoot); break;
+      //case 3: createSellerTransactions(); break;
+      //case 4: createBuyerTransactions(); break;
+      //case 5: findTransactionsByTimePeriod(); break;
+      //case 6: calculateRevenueBySeller(); break;
+      //case 7: findTransactionsByEnergyRange(); break;
+      //case 8: sortBuyersByEnergyBought(); break;
+      //case 9: sortSellerBuyerPairsByNoT(); break;
+      case 0: printf("\nExiting program...\n"); break;
+      default: printf("\n[!] Invalid choice! Please try again.\n");
     }
-  } while (choice != 0);
+  }
 
-
-  saveTransactions(mainhead);
-  saveRegularBuyers(sellerhead);
-  clearPairs(&pairhead);
-  cleanTransList(&mainhead);
-  clearSellersList(&sellerlisthead);
-  clearSellersList(&buyerlisthead);
-  cleanSellersList(&sellerhead);
+  saveTransactionsToCSV(transRoot);
+  printf("Clearing the transaction tree....");
+  deleteTransTree(transRoot);
+  printf("Done\n");
+  return 0;
 }
